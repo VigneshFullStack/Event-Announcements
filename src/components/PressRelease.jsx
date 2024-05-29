@@ -9,7 +9,9 @@ function PressReleaseComponent() {
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedItem, setSelectedItem] = useState(null);
-    const itemsPerPage = 5;
+    const [activeTab, setActiveTab] = useState('all');
+    const [selectedType, setSelectedType] = useState(null);
+    const itemsPerPage = 4;
     const { data: news, status } = useSelector(state => state.news);
 
     // Function to format date in the specified format
@@ -34,17 +36,36 @@ function PressReleaseComponent() {
         setCurrentPage(1); // Reset to the first page on new search
     };
 
-    const filteredNews = news.filter(item =>
-        item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.type.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const handleTabChange = (tab) => {
+        setActiveTab(tab);
+        if (tab === 'types') {
+            const firstType = newsTypes[0]; // Get the first type
+            setSelectedType(firstType); // Set it as the selected type
+        } else {
+            setSelectedType(null); // Reset selectedType if tab is not 'types'
+        }
+        setCurrentPage(1);
+    }
+
+    const handleTypeClick = (type) => {
+        setSelectedType(type);
+        setCurrentPage(1);
+    }
+
+    const filteredNews = news.filter(item => {
+        const matchesSearch =
+            item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.type.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesType = selectedType ? item.type === selectedType : true;
+        return matchesSearch && matchesType;
+    });
 
     useEffect(() => {
         setCurrentPage(1);
-    }, [searchTerm]);
+    }, [searchTerm, selectedType]);
 
     useEffect(() => {
-        if (news && news.length > 0) {
+        if (news.length > 0) {
             setSelectedItem(news[0]);
         }
     }, [news]);
@@ -123,6 +144,8 @@ function PressReleaseComponent() {
         );
     };
 
+    const newsTypes = [...new Set(news.map(item => item.type))];
+
     return (
         <div className='container-fluid'>
             <div className="row mt-3 mb-5">
@@ -138,13 +161,36 @@ function PressReleaseComponent() {
                             <i className="fa-solid fa-magnifying-glass search-icon"></i>
                         </a>
                     </form>
+                    <div className="tabs my-3 d-flex justify-content-center">
+                        {searchTerm === '' && (
+                            <>
+                                <button className={`tab ${activeTab === 'all' ? 'btn btn-secondary' : 'btn btn-outline-secondary'}`} onClick={() => handleTabChange('all')}>All</button>
+                                <button className={`tab ${activeTab === 'types' ? 'btn btn-secondary' : 'btn btn-outline-secondary'}`} onClick={() => handleTabChange('types')}>By Type</button>
+                            </>
+                        )}
+                    </div>
+                    {activeTab === 'types' && (
+                        <div className="types my-3 d-flex justify-content-center">
+                            {newsTypes.map(type => (
+                                <button style={{ width: 'auto' }} key={type} className={`${selectedType === type ? 'btn btn-primary' : 'btn btn-outline-primary'}`} onClick={() => handleTypeClick(type)}>
+                                    {type}
+                                </button>
+                            ))}
+                        </div>
+                    )}
                     {currentNews.length > 0 ? (
                         currentNews.map(item => (
-                            <div className={`row ${selectedItem?.ID === item.ID ? 'news-item-current news-item-helper' : 'news-item news-item-helper'}`}
-                                key={item.ID} onClick={() => handleItemClick(item)}
-                                style={{ cursor: 'pointer' }}>
+                            <div
+                                className={`row ${selectedItem?.ID === item.ID ? 'news-item-current news-item-helper' : 'news-item news-item-helper'}`}
+                                key={item.ID}
+                                onClick={() => handleItemClick(item)}
+                                style={{ cursor: 'pointer' }}
+                                role="button"
+                                tabIndex={0}
+                                onKeyPress={() => handleItemClick(item)}
+                            >
                                 <div className='col-md-8'>
-                                    <p>{formatDate(item.date)}</p>
+                                    <p>{formatDate(item._date)}</p>
                                     <h6><a href="#">{item.title}</a></h6>
                                 </div>
                                 <div className='col-md-4 type'>
@@ -153,9 +199,9 @@ function PressReleaseComponent() {
                             </div>
                         ))
                     ) : (
-                        <div className="row">
+                        <div className="row mt-3">
                             <div className='col-12'>
-                                <img src={NoResultsFound} className='no-result-img' alt="no results found" />
+                                <img src={NoResultsFound} className='no-result-img' alt="No results found" />
                             </div>
                         </div>
                     )}
