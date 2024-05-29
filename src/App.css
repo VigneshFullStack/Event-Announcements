@@ -92,37 +92,35 @@ input#search-bar {
   font-size: 1rem;
   border: 1px solid #D0CFCE;
   outline: none;
+}
 
-  &:focus {
-    border: 1px solid #008ABF;
-    transition: 0.35s ease;
-    color: #008ABF;
+input#search-bar:focus {
+  border: 1px solid #008ABF;
+  transition: border 0.35s ease;
+  color: #008ABF;
+}
 
-    &::-webkit-input-placeholder {
-      transition: opacity 0.45s ease;
-      opacity: 0;
-    }
+input#search-bar:focus::-webkit-input-placeholder {
+  transition: opacity 0.45s ease;
+  opacity: 0;
+}
 
-    &::-moz-placeholder {
-      transition: opacity 0.45s ease;
-      opacity: 0;
-    }
+input#search-bar:focus::-moz-placeholder {
+  transition: opacity 0.45s ease;
+  opacity: 0;
+}
 
-    &:-ms-placeholder {
-      transition: opacity 0.45s ease;
-      opacity: 0;
-    }
-  }
+input#search-bar:focus:-ms-input-placeholder {
+  transition: opacity 0.45s ease;
+  opacity: 0;
 }
 
 .search-icon {
   color: #008ABF;
   position: absolute;
-  width: 75px;
-  height: 75px;
   font-size: 20px;
   top: 14px;
-  right: -30px;
+  right: 20px;
 }
 
 .no-result-img {
@@ -210,6 +208,12 @@ button:disabled {
 .title {
   display: inline-block;
   border-bottom: 4px solid rgb(194, 31, 189);  
+}
+
+.form-select:focus {
+  border-color: #ffffff;
+  outline: 0;
+  box-shadow: 0 0 0 .25rem rgb(152 181 223 / 25%);
 }
 
 @media only screen and (max-width: 767px) {

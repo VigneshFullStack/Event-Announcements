@@ -11,6 +11,7 @@ function PressReleaseComponent() {
     const [selectedItem, setSelectedItem] = useState(null);
     const [activeTab, setActiveTab] = useState('all');
     const [selectedType, setSelectedType] = useState(null);
+    const [selectedYear, setSelectedYear] = useState('All');
     const itemsPerPage = 4;
     const { data: news, status } = useSelector(state => state.news);
 
@@ -52,12 +53,18 @@ function PressReleaseComponent() {
         setCurrentPage(1);
     }
 
+    const handleYearChange = (e) => {
+        setSelectedYear(e.target.value);
+        setCurrentPage(1);
+    }
+
     const filteredNews = news.filter(item => {
         const matchesSearch =
             item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             item.type.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesType = selectedType ? item.type === selectedType : true;
-        return matchesSearch && matchesType;
+        const matchesYear = selectedYear === 'All' || new Date(item.date).getFullYear().toString() === selectedYear;
+        return matchesSearch && matchesType && matchesYear;
     });
 
     useEffect(() => {
@@ -144,35 +151,53 @@ function PressReleaseComponent() {
         );
     };
 
+    // Get types from the news data
     const newsTypes = [...new Set(news.map(item => item.type))];
+
+    // Get unique years from the news data
+    const years = [...new Set(news.map(item => new Date(item.date).getFullYear()))].sort((a, b) => b - a);
 
     return (
         <div className='container-fluid'>
             <div className="row mt-3 mb-5">
                 <div className="col-xl-5">
                     <div className='text-center'><h3 className='text-secondary mb-4 title'>PRESS RELEASES</h3></div>
-                    <form className="search-container mb-4">
-                        <input type="text"
-                            id="search-bar"
-                            value={searchTerm}
-                            onChange={handleSearchChange}
-                            placeholder="Search by title or type..." />
-                        <a href="#">
-                            <i className="fa-solid fa-magnifying-glass search-icon"></i>
-                        </a>
-                    </form>
-                    <div className="tabs my-3 d-flex justify-content-center">
+                    <div className="row">
+                        <div className="col-md-8" style={{ padding: '0' }}>
+                            <form className="search-container">
+                                <input type="text"
+                                    id="search-bar"
+                                    value={searchTerm}
+                                    onChange={handleSearchChange}
+                                    placeholder="Search by title or type..." />
+                                <a href="#">
+                                    <i className="fa-solid fa-magnifying-glass search-icon"></i>
+                                </a>
+                            </form>
+                        </div>
+                        <div className="col-md-4" style={{ paddingRight: '0' }}>
+                            <div className="dropdown">
+                                <select style={{ height: '45px' }} className="form-select" value={selectedYear} onChange={handleYearChange}>
+                                    <option value="All">All Years</option>
+                                    {years.map(year => (
+                                        <option key={year} value={year}>{year}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="tabs mt-5 mb-4 d-flex justify-content-center">
                         {searchTerm === '' && (
                             <>
-                                <button className={`tab ${activeTab === 'all' ? 'btn btn-secondary' : 'btn btn-outline-secondary'}`} onClick={() => handleTabChange('all')}>All</button>
-                                <button className={`tab ${activeTab === 'types' ? 'btn btn-secondary' : 'btn btn-outline-secondary'}`} onClick={() => handleTabChange('types')}>By Type</button>
+                                <button className={`tab ${activeTab === 'all' ? 'btn btn-primary' : 'btn btn-outline-primary'}`} onClick={() => handleTabChange('all')}>All</button>
+                                <button className={`tab ${activeTab === 'types' ? 'btn btn-primary' : 'btn btn-outline-primary'}`} onClick={() => handleTabChange('types')}>By Type</button>
                             </>
                         )}
                     </div>
-                    {activeTab === 'types' && (
+                    {searchTerm === '' && activeTab === 'types' && (
                         <div className="types my-3 d-flex justify-content-center">
                             {newsTypes.map(type => (
-                                <button style={{ width: 'auto' }} key={type} className={`${selectedType === type ? 'btn btn-primary' : 'btn btn-outline-primary'}`} onClick={() => handleTypeClick(type)}>
+                                <button style={{ width: 'auto', borderRadius: '20px' }} key={type} className={`${selectedType === type ? 'btn btn-secondary' : 'btn btn-outline-secondary'}`} onClick={() => handleTypeClick(type)}>
                                     {type}
                                 </button>
                             ))}
@@ -190,7 +215,7 @@ function PressReleaseComponent() {
                                 onKeyPress={() => handleItemClick(item)}
                             >
                                 <div className='col-md-8'>
-                                    <p>{formatDate(item._date)}</p>
+                                    <p>{formatDate(item.date)}</p>
                                     <h6><a href="#">{item.title}</a></h6>
                                 </div>
                                 <div className='col-md-4 type'>
