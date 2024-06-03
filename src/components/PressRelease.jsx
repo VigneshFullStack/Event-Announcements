@@ -163,7 +163,7 @@ function PressReleaseComponent() {
                 <div className="col-xl-5">
                     <div className='text-center'><h3 className='text-secondary mb-4 title'>PRESS RELEASES</h3></div>
                     <div className="row">
-                        <div className="col-md-8" style={{ padding: '0' }}>
+                        <div className="col-md-7" style={{ padding: '0' }}>
                             <form className="search-container">
                                 <input type="text"
                                     id="search-bar"
@@ -175,7 +175,7 @@ function PressReleaseComponent() {
                                 </a>
                             </form>
                         </div>
-                        <div className="col-md-4" style={{ paddingRight: '0' }}>
+                        <div className="col-md-5" style={{ paddingRight: '0' }}>
                             <div className="dropdown">
                                 <select style={{ height: '45px' }} className="form-select" value={selectedYear} onChange={handleYearChange}>
                                     <option value="All">All Years</option>
