@@ -184,15 +184,13 @@ function PressReleaseComponent() {
                                 </a>
                             </form>
                         </div>
-                        <div className="col-md-5" style={{ paddingRight: '0' }}>
-                            <div className="dropdown">
-                                <select style={{ height: '45px' }} className="form-select" value={selectedYear} onChange={handleYearChange}>
-                                    <option value="All">All Years</option>
-                                    {years.map(year => (
-                                        <option key={year} value={year}>{year}</option>
-                                    ))}
-                                </select>
-                            </div>
+                        <div className="col-md-5 dropdown">
+                            <select style={{ height: '45px' }} className="form-select" value={selectedYear} onChange={handleYearChange}>
+                                <option value="All">All Years</option>
+                                {years.map(year => (
+                                    <option key={year} value={year}>{year}</option>
+                                ))}
+                            </select>
                         </div>
                     </div>
                     <div className="tabs mt-5 mb-4 d-flex justify-content-center">
