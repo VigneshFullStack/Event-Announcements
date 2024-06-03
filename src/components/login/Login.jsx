@@ -10,28 +10,28 @@ const LoginComponent = () => {
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const loginError = useSelector((state) => state.auth.loginError);
+  const { isAuthenticated, loginError } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (loginError) {
       alert(loginError);
       dispatch(clearError());
     }
-  }, [loginError, dispatch]);
+    if(isAuthenticated){
+      navigate('/pressrelease');
+    }
+  }, [loginError, isAuthenticated, dispatch, navigate]);
 
   const handleLogin = (e) => {
     e.preventDefault();
     dispatch(login({ email, password }));
-    if (!loginError) {
-      navigate('/pressrelease');
-    }
   };
 
   return (
     <div className="login-root">
       <div className="box-root flex-flex flex-direction--column" style={{ minHeight: '100vh', flexGrow: 1 }}>
         <div className="loginbackground box-background--white padding-top--64">
-          <div className="loginbackground-gridContainer">
+          <div className="loginbackground-gridContainer" style={{ marginTop: '100px' }}>
             <div className="box-root flex-flex" style={{ gridArea: 'top / start / 8 / end' }}>
               <div className="box-root" style={{ backgroundImage: 'linear-gradient(white 0%, rgb(247, 250, 252) 33%)', flexGrow: 1 }}></div>
             </div>
@@ -61,7 +61,7 @@ const LoginComponent = () => {
             </div>
           </div>
         </div>
-        <div className="box-root padding-top--24 flex-flex flex-direction--column" style={{ flexGrow: 1, zIndex: 9 }}>
+        <div className="box-root padding-top--24 flex-flex flex-direction--column login" style={{ flexGrow: 1, zIndex: 9, marginTop: '100px' }}>
           <div className="box-root padding-top--48 padding-bottom--24 flex-flex flex-justifyContent--center">
             <h1><a href="#" rel="dofollow">EUROLAND</a></h1>
           </div>

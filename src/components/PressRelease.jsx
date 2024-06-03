@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { logout } from '../store/authSlice';
 import '../App.css';
 import StatusCode from '../utils/StatusCode';
 import NoResultsFound from '../assets/no-results-found.png';
@@ -14,6 +16,8 @@ function PressReleaseComponent() {
     const [selectedYear, setSelectedYear] = useState('All');
     const itemsPerPage = 4;
     const { data: news, status } = useSelector(state => state.news);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     // Function to format date in the specified format
     function formatDate(dateString) {
@@ -95,6 +99,11 @@ function PressReleaseComponent() {
 
     const handleItemClick = (item) => {
         setSelectedItem(item);
+    };
+
+    const handleLogout = () => {
+        dispatch(logout());
+        navigate('/');
     };
 
     if (status === StatusCode.LOADING || !news) {
@@ -233,7 +242,12 @@ function PressReleaseComponent() {
                     {filteredNews.length > itemsPerPage && renderPagination()}
                 </div>
                 <div className="col-xl-7">
-                    <div className='text-center'><h3 className='text-secondary mb-4 title'>EVENTS</h3></div>
+                    <div className='text-center events'>
+                        <div></div>
+                        <h3 className='text-secondary mb-4 title'>EVENTS</h3>
+                        <i className="fa-solid fa-right-from-bracket" onClick={handleLogout}
+                            title="logout"></i>
+                    </div>
                     <EventsComponent selectedItem={selectedItem} />
                 </div>
             </div>

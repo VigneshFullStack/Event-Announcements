@@ -274,3 +274,9 @@ a.ssolink {
         transform: translateX(0px);
     }
 }
+
+@media only screen and (max-width: 1024px) {
+    .login {
+        margin-top: 0 !important;
+    }
+}

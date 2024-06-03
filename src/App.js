@@ -6,6 +6,7 @@ import LoginComponent from './components/login/Login';
 import PressReleaseComponent from './components/PressRelease';
 import ProtectedRoute from './utils/ProtectedRoute';
 import store from './store/store';
+import PageNotFound from './components/PageNotFound';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="*" element={<PageNotFound /> } />
           </Routes>
         </div>
       </Router>
