@@ -106,16 +106,16 @@ function PressReleaseComponent() {
         navigate('/');
     };
 
-    if (status === StatusCode.LOADING || !news) {
-        return (
-            <div className="loader">
-                <div>
-                    <div className="loader-circle"></div>
-                    <span className="loader-text">Loading...</span>
-                </div>
-            </div>
-        );
-    }
+    // if (status === StatusCode.LOADING || !news) {
+    //     return (
+    //         <div className="loader">
+    //             <div>
+    //                 <div className="loader-circle"></div>
+    //                 <span className="loader-text">Loading...</span>
+    //             </div>
+    //         </div>
+    //     );
+    // }
 
     const renderPagination = () => {
         const pageNumbers = [];
@@ -210,7 +210,21 @@ function PressReleaseComponent() {
                             ))}
                         </div>
                     )}
-                    {currentNews.length > 0 ? (
+                    {status === StatusCode.LOADING ? (
+                        Array.from({ length: itemsPerPage }).map((_, index) => (
+                            <div className="skeleton" key={index}>
+                                <div className="skeleton-left">
+                                    <div className="line h17 w40 m10"></div>
+                                    <div className="line"></div>
+                                    <div className="line h8 w50"></div>
+                                    <div className="line  w75"></div>
+                                </div>
+                                <div className="skeleton-right">
+                                    <div className="square"></div>
+                                </div>
+                            </div>
+                        ))
+                    ) : currentNews.length > 0 ? (
                         currentNews.map(item => (
                             <div
                                 className={`row ${selectedItem?.ID === item.ID ? 'news-item-current news-item-helper' : 'news-item news-item-helper'}`}
