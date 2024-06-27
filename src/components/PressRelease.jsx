@@ -19,22 +19,21 @@ function PressReleaseComponent() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Function to format date in the specified format
-  function formatDate(dateString) {
+  // Function to format date and time
+  const formatDateAndTime = (dateString) => {
     const date = new Date(dateString);
-    const day = date.getDate();
-    const month = date.toLocaleString("default", { month: "short" });
+    const options = { day: "numeric", month: "short" }; // e.g., "22-31 OCT"
+    const formattedDate = date
+      .toLocaleDateString("en-US", options)
+      .toUpperCase();
+    const formattedTime = date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
     const year = date.getFullYear();
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
 
-    // Adding leading zeros if necessary
-    const formattedDay = day < 10 ? `0${day}` : day;
-    const formattedHours = hours < 10 ? `0${hours}` : hours;
-    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-
-    return `${formattedDay}-${month}-${year} ${formattedHours}:${formattedMinutes}`;
-  }
+    return { date: formattedDate, time: formattedTime, year };
+  };
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -108,17 +107,6 @@ function PressReleaseComponent() {
     navigate("/");
   };
 
-  // if (status === StatusCode.LOADING || !news) {
-  //     return (
-  //         <div className="loader">
-  //             <div>
-  //                 <div className="loader-circle"></div>
-  //                 <span className="loader-text">Loading...</span>
-  //             </div>
-  //         </div>
-  //     );
-  // }
-
   const renderPagination = () => {
     const pageNumbers = [];
     const maxVisiblePages = 5;
@@ -177,6 +165,8 @@ function PressReleaseComponent() {
   const years = [
     ...new Set(news.map((item) => new Date(item.date).getFullYear())),
   ].sort((a, b) => b - a);
+
+  const dateTimeClasses = ["dt1", "dt2", "dt3", "dt4"];
 
   return (
     <div className="container-fluid">
@@ -275,68 +265,38 @@ function PressReleaseComponent() {
               </div>
             ))
           ) : currentNews.length > 0 ? (
-            currentNews.map((item) => (
-              <div
-                className={`row ${
-                  selectedItem?.ID === item.ID
-                    ? "news-item-current news-item-helper"
-                    : "news-item news-item-helper"
-                }`}
-                key={item.ID}
-                onClick={() => handleItemClick(item)}
-                style={{ cursor: "pointer" }}
-                role="button"
-                tabIndex={0}
-              >
-                <div className="col-md-8">
-                  <div className="row">
-                    <div className="col-1" style={{ marginTop: "3px" }}>
-                      <i
-                        className="fa-solid fa-calendar-days text-secondary"
-                        style={{ fontSize: "20px", fontWeight: "normal" }}
-                      ></i>
+            currentNews.map((item, index) => {
+              const { date, time, year } = formatDateAndTime(item.date);
+              return (
+                <div
+                  className={`${
+                    selectedItem?.ID === item.ID
+                      ? "news-item-current event-card"
+                      : "event-card"
+                  }`}
+                  key={item.ID}
+                  onClick={() => handleItemClick(item)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <div className="left">
+                    <div className={`date-time ${dateTimeClasses[index % 4]}`}>
+                      <p className="date">
+                        {date}, {year}
+                      </p>
+                      <p className="time">{time}</p>
                     </div>
-                    <div className="col-11">
-                      <span
-                        style={{
-                          display: "inline-block",
-                          fontSize: "16px",
-                        }}
-                      >
-                        {formatDate(item.date)}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="row pt-2">
-                    <div className="col-1" style={{ marginTop: "5px" }}>
-                      <i
-                        className="fa-solid fa-bookmark"
-                        style={{ fontSize: "20px", fontWeight: "normal" }}
-                      ></i>
-                    </div>
-                    <div className="col-11">
-                      <a
-                        href="#"
-                        style={{
-                          fontSize: "16px",
-                        }}
-                      >
-                        {item.title}
-                      </a>
+                    <div className="event-info">
+                      <h6 className="event-name">{item.title}</h6>
+                      <p className="event-detail text-secondary">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Tempora saepe similique officia nam atque voluptatem ad
+                        necessitatibus consequuntur, nostrum repellendus.
+                      </p>
                     </div>
                   </div>
                 </div>
-                <div className="col-md-4 type">
-                  <h3
-                    className="fw-bold badge bg-light text-dark"
-                    style={{ marginBottom: "0", fontSize: "14px" }}
-                  >
-                    {item.type}
-                  </h3>
-                </div>
-              </div>
-            ))
+              );
+            })
           ) : (
             <div className="row mt-3">
               <div className="col-12">
@@ -352,10 +312,7 @@ function PressReleaseComponent() {
         </div>
         <div className="col-xl-7">
           <div className="text-center events">
-            {/* <div></div> */}
             <h3 className="text-secondary mb-4 title">EVENTS</h3>
-            {/* <i className="fa-solid fa-right-from-bracket" onClick={handleLogout}
-                            title="logout"></i> */}
           </div>
           <EventsComponent selectedItem={selectedItem} />
         </div>

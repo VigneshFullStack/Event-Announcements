@@ -1,3 +1,7 @@
+body {
+  background: #eceff8 !important;
+}
+
 ::selection {
   color: rgb(27, 52, 194);
   background: rgb(244, 214, 17);
@@ -50,22 +54,12 @@ h3 {
   margin-top: 16px;
 }
 
-.news-item {
-  border-radius: 5px;
-  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, .14), 0 3px 3px -2px rgba(0, 0, 0, .2), 0 1px 8px 0 rgba(0, 0, 0, .12);
-}
-
 .news-item-helper {
   margin-top: 10px;
   margin-bottom: 10px;
   padding: 20px 25px;
   transition: 0.4s ease-out
 }
-
-/* .news-item-current {
-  border-radius: 5px;
-  box-shadow: rgb(80 77 77 / 90%) 0px 0px 0px 2px, rgb(69 66 66 / 95%) 0px 4px 6px -1px, rgb(76 73 73 / 94%) 0px 1px 0px inset;
-} */
 
 @property --angle {
 	syntax: '<angle>';
@@ -75,21 +69,81 @@ h3 {
 
 .news-item-current {
 	--angle: 0deg;
-	background: linear-gradient(white, white) padding-box, conic-gradient(from var(--angle), #dfdfdf, #17171b) border-box;
+	background: linear-gradient(white, white) padding-box, conic-gradient(from var(--angle), #dfdfdf, #17171b) border-box !important;
 	border: 2px solid transparent;
 	border-radius: 5px;
 	animation: rotate-gradient 3s infinite linear;
 }
 
+.event-card {
+  width: 100%;
+  background: white;
+  border-radius: 15px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.event-card:hover {
+  box-shadow: #cfd5e0 0 0 10px 5px;
+}
+
+.left {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 15px;
+}
+
+.date-time {
+  padding: 10px 0;
+  width: 200px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  letter-spacing: 2px;
+}
+
+.dt1 {
+  background: #eceff8;
+}
+.dt2 {
+  background: #f8ecf8;
+}
+.dt3 {
+  background: #f8ecec;
+}
+.dt4 {
+  background: #eef8ec;
+}
+
+.date {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.time {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.event-detail {
+  font-size: 12px;
+  /* color: #4b4b4b; */
+  margin-top: 5px;
+}
+
+ion-icon {
+  color: white;
+  font-size: 17px;
+}
+
 @keyframes rotate-gradient {
 	from { --angle: 0deg; }
 	to { --angle: 360deg; }
-}
-
-.news-item:hover,
-.news-item-current:hover {
-  scale: 1.02;
-  cursor: pointer;
 }
 
 .type {
@@ -113,6 +167,7 @@ input#search-bar {
   font-size: 1rem;
   border: 1px solid #D0CFCE;
   outline: none;
+  border-radius: 5px;
 }
 
 input#search-bar:focus {
@@ -183,9 +238,9 @@ input#search-bar:focus:-ms-input-placeholder {
 }
 
 .page-number.active {
-  font-size: 1.3em;
-  height: 40px;
-  width: 40px;
+  font-size: 1em;
+  height: 35px;
+  width: 35px;
   background-color: #0057b3;
   color: white;
 }
@@ -401,6 +456,7 @@ button:disabled {
   height: 80px !important;
   width: 80px;
 }
+
 
 @keyframes wave-lines {
   0% {
