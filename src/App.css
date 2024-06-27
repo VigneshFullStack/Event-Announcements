@@ -62,9 +62,28 @@ h3 {
   transition: 0.4s ease-out
 }
 
-.news-item-current {
+/* .news-item-current {
   border-radius: 5px;
   box-shadow: rgb(80 77 77 / 90%) 0px 0px 0px 2px, rgb(69 66 66 / 95%) 0px 4px 6px -1px, rgb(76 73 73 / 94%) 0px 1px 0px inset;
+} */
+
+@property --angle {
+	syntax: '<angle>';
+	inherits: true;
+	initial-value: 0deg;
+}
+
+.news-item-current {
+	--angle: 0deg;
+	background: linear-gradient(white, white) padding-box, conic-gradient(from var(--angle), #dfdfdf, #17171b) border-box;
+	border: 2px solid transparent;
+	border-radius: 5px;
+	animation: rotate-gradient 3s infinite linear;
+}
+
+@keyframes rotate-gradient {
+	from { --angle: 0deg; }
+	to { --angle: 360deg; }
 }
 
 .news-item:hover,
@@ -230,7 +249,8 @@ button:disabled {
 
 .events {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
+  justify-content: center;
   align-items: center;
 }
 
